@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Satyam Pandey | Visionary Founder</title>
     
     <!-- Ultra-Premium Typography -->
@@ -27,27 +27,34 @@
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             background-color: var(--bg); color: var(--fg);
             font-family: var(--font-body);
             overflow-x: hidden; -webkit-font-smoothing: antialiased;
+            width: 100%;
+        }
+
+        /* Hide cursor by default, enable on hover devices */
+        html { cursor: auto; }
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
         }
 
         /* --- PRELOADER --- */
         .preloader {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 10000;
             display: flex; flex-direction: column; justify-content: flex-end; padding: 5vw;
         }
-        .preloader-counter { font-family: var(--font-display); font-size: 15vw; line-height: 0.8; font-weight: 800; color: var(--fg); }
+        .preloader-counter { font-family: var(--font-display); font-size: clamp(4rem, 15vw, 15rem); line-height: 0.8; font-weight: 800; color: var(--fg); }
         .preloader-bar-wrap { width: 100%; height: 2px; background: var(--grid); margin-top: 2rem; position: relative; overflow: hidden; }
         .preloader-bar { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent); }
 
         /* --- NOISE & CURSOR --- */
         .noise {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 9000; opacity: 0.05;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
@@ -57,12 +64,17 @@
             background: var(--accent); border-radius: 50%;
             transform: translate(-50%, -50%); z-index: 9999; pointer-events: none;
             transition: width 0.3s, height 0.3s, background 0.3s, mix-blend-mode 0.3s;
+            display: none;
         }
         .cursor.active { width: 80px; height: 80px; background: var(--fg); mix-blend-mode: difference; }
 
+        @media (hover: hover) and (pointer: fine) {
+            .cursor { display: block; }
+        }
+
         /* --- GLOBAL GRID --- */
         .grid-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1;
             background-image: 
                 linear-gradient(to right, var(--grid) 1px, transparent 1px),
@@ -74,6 +86,7 @@
         .split-parent { overflow: hidden; }
         .split-child { display: inline-block; transform: translateY(110%); }
         .text-stroke { -webkit-text-stroke: 1.5px var(--fg); color: transparent; }
+        @media (max-width: 768px) { .text-stroke { -webkit-text-stroke: 1px var(--fg); } }
         
         /* --- NAVIGATION --- */
         nav {
@@ -85,9 +98,9 @@
         .nav-links { display: flex; gap: 3rem; }
         .nav-link { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; text-decoration: none; color: var(--fg); letter-spacing: 0.1em; }
 
-        /* --- FIXED HERO SECTION --- */
+        /* --- RESPONSIVE HERO SECTION --- */
         .hero {
-            min-height: 100vh; width: 100vw; position: relative;
+            min-height: 100vh; width: 100%; position: relative;
             display: flex; align-items: center; padding: 15vh 5vw 5vh 5vw;
         }
 
@@ -99,7 +112,7 @@
         
         .hero-title {
             font-family: var(--font-display); 
-            font-size: clamp(3rem, 9.5vw, 12rem); 
+            font-size: clamp(2.8rem, 10vw, 12rem); 
             font-weight: 800; 
             line-height: 0.95; 
             text-transform: uppercase;
@@ -127,24 +140,28 @@
             font-size: 1.1rem; line-height: 1.7; margin-top: 1rem;
         }
 
-        /* --- HORIZONTAL SCROLL (EXPERTISE) --- */
-        .horizontal-section { height: 100vh; overflow: hidden; display: flex; align-items: center; background: var(--bg); border-top: 1px solid var(--grid); border-bottom: 1px solid var(--grid); }
-        .horizontal-wrapper { display: flex; width: max-content; height: 100%; padding: 0 5vw; align-items: center; gap: 10vw; }
-        
+        /* --- ARCHITECTURE SECTION --- */
+        .horizontal-section { 
+            height: 100vh; overflow: hidden; display: flex; align-items: center; 
+            background: var(--bg); border-top: 1px solid var(--grid); border-bottom: 1px solid var(--grid); 
+        }
+        .horizontal-wrapper { 
+            display: flex; width: max-content; height: 100%; padding: 0 5vw; align-items: center; gap: 10vw; 
+        }
         .h-panel { width: 45vw; display: flex; flex-direction: column; }
         .h-num { font-family: var(--font-mono); color: var(--accent); font-size: 1.5rem; margin-bottom: 2rem; }
-        .h-title { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 6rem); line-height: 0.9; margin-bottom: 2rem; text-transform: uppercase; font-weight: 700; }
+        .h-title { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 6rem); line-height: 0.9; margin-bottom: 2rem; text-transform: uppercase; font-weight: 700; }
         .h-desc { font-size: 1.1rem; color: var(--muted); line-height: 1.7; max-width: 80%; }
 
         /* --- 3D MARQUEE (BRANDS) --- */
-        .brands-section { padding: 15vh 0; overflow: hidden; position: relative; perspective: 1000px; }
+        .brands-section { padding: 15vh 0; overflow: hidden; position: relative; perspective: 1000px; width: 100%; }
         .marquee-3d-wrap { transform: rotateX(15deg) rotateZ(-3deg); transform-style: preserve-3d; }
         .marquee-track { display: flex; width: max-content; gap: 3rem; margin-bottom: 3rem; }
         .track-left { animation: marqueeL 80s linear infinite; }
         .track-right { animation: marqueeR 80s linear infinite; }
 
         .brand-item {
-            font-family: var(--font-display); font-size: clamp(3rem, 6vw, 8rem);
+            font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 8rem);
             font-weight: 800; color: transparent; -webkit-text-stroke: 1px var(--muted);
             text-transform: uppercase; white-space: nowrap; transition: 0.4s ease;
         }
@@ -154,44 +171,77 @@
         @keyframes marqueeR { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 
         /* --- METRICS BRUTALIST --- */
-        .metrics-section { border-top: 1px solid var(--grid); }
-        .metric-row { display: flex; border-bottom: 1px solid var(--grid); transition: background 0.4s ease; }
+        .metrics-section { border-top: 1px solid var(--grid); width: 100%; }
+        .metric-row { display: flex; border-bottom: 1px solid var(--grid); transition: background 0.4s ease; width: 100%; }
         .metric-row:hover { background: var(--fg); color: var(--bg); }
         .metric-row:hover .m-label, .metric-row:hover .m-num { color: var(--bg); }
         
-        .m-num { width: 50%; padding: 4rem 5vw; font-family: var(--font-display); font-size: clamp(3.5rem, 8vw, 10rem); font-weight: 800; line-height: 1; border-right: 1px solid var(--grid); transition: 0.4s; }
-        .m-label { width: 50%; padding: 4rem 5vw; display: flex; align-items: center; font-family: var(--font-mono); font-size: 1.25rem; text-transform: uppercase; color: var(--muted); transition: 0.4s; letter-spacing: 0.05em; }
+        .m-num { width: 50%; padding: 4rem 5vw; font-family: var(--font-display); font-size: clamp(3rem, 8vw, 10rem); font-weight: 800; line-height: 1; border-right: 1px solid var(--grid); transition: 0.4s; }
+        .m-label { width: 50%; padding: 4rem 5vw; display: flex; align-items: center; font-family: var(--font-mono); font-size: clamp(1rem, 2vw, 1.25rem); text-transform: uppercase; color: var(--muted); transition: 0.4s; letter-spacing: 0.05em; }
 
         /* --- LEADERSHIP ROSTER --- */
-        .roster-section { padding: 15vh 5vw; }
-        .section-heading { font-family: var(--font-display); font-size: clamp(3rem, 5vw, 4rem); text-transform: uppercase; margin-bottom: 10vh; }
+        .roster-section { padding: 15vh 5vw; width: 100%; }
+        .section-heading { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); text-transform: uppercase; margin-bottom: 10vh; }
         
         .team-item { display: flex; justify-content: space-between; align-items: flex-end; padding: 2.5rem 0; border-bottom: 1px solid var(--grid); position: relative; }
-        .team-name { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 5rem); font-weight: 700; text-transform: uppercase; z-index: 2; transition: 0.3s; }
-        .team-role { font-family: var(--font-mono); font-size: 1rem; color: var(--accent); text-transform: uppercase; z-index: 2; }
+        .team-name { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 5rem); font-weight: 700; text-transform: uppercase; z-index: 2; transition: 0.3s; }
+        .team-role { font-family: var(--font-mono); font-size: clamp(0.7rem, 2vw, 1rem); color: var(--accent); text-transform: uppercase; z-index: 2; }
         
         .team-item::before { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: var(--grid); z-index: 1; transition: height 0.4s cubic-bezier(0.76, 0, 0.24, 1); }
         .team-item:hover::before { height: 100%; }
         .team-item:hover .team-name { padding-left: 2rem; color: var(--accent); }
 
         /* --- FOOTER CTA --- */
-        footer { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-top: 1px solid var(--grid); position: relative; overflow: hidden; }
-        .footer-title { font-family: var(--font-display); font-size: clamp(4rem, 10vw, 15rem); font-weight: 800; line-height: 0.85; text-transform: uppercase; margin-bottom: 6vh; }
-        .cta-links { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; }
+        footer { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-top: 1px solid var(--grid); position: relative; overflow: hidden; padding: 0 5vw; }
+        .footer-title { font-family: var(--font-display); font-size: clamp(3rem, 10vw, 15rem); font-weight: 800; line-height: 0.85; text-transform: uppercase; margin-bottom: 6vh; }
+        .cta-links { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; width: 100%; }
         
-        .cta-btn { font-family: var(--font-mono); font-size: 1rem; color: var(--fg); text-decoration: none; text-transform: uppercase; padding: 1.5rem 3rem; border: 1px solid var(--grid); border-radius: 100px; transition: 0.4s; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+        .cta-btn { font-family: var(--font-mono); font-size: 0.9rem; color: var(--fg); text-decoration: none; text-transform: uppercase; padding: 1.5rem 3rem; border: 1px solid var(--grid); border-radius: 100px; transition: 0.4s; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
         .cta-btn:hover { background: var(--fg); color: var(--bg); }
 
+        /* =========================================
+           MOBILE & TABLET RESPONSIVE OVERRIDES
+           ========================================= */
         @media (max-width: 1024px) {
-            .hero-img-container { width: 50vw; top: 55%; }
+            .hero-img-container { width: 50vw; }
             .horizontal-wrapper { gap: 15vw; }
             .h-panel { width: 70vw; }
-            .m-num, .m-label { width: 100%; border-right: none; padding: 3rem 5vw; }
-            .metric-row { flex-direction: column; }
         }
+
         @media (max-width: 768px) {
-            .hero-img-container { display: none; }
-            .team-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            /* Navigation */
+            nav { padding: 1.5rem 5vw; }
+            .nav-links { gap: 1.5rem; }
+            
+            /* Hero Section */
+            .hero { padding-top: 12vh; flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+            .hero-title { margin-bottom: 1.5rem; }
+            .hero-meta { margin-bottom: 3rem; font-size: 1rem; }
+            .hero-img-container {
+                position: relative; top: auto; right: auto; transform: none;
+                width: 100%; height: 50vh; clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            }
+            .hero-img-container::after { background: linear-gradient(180deg, var(--bg) 0%, transparent 30%); }
+
+            /* Disable GSAP Horizontal Scroll on Mobile - Stack vertically instead */
+            .horizontal-section { height: auto; padding: 10vh 0; }
+            .horizontal-wrapper { flex-direction: column; width: 100%; gap: 4rem; padding: 0 5vw; }
+            .h-panel { width: 100%; }
+            .h-desc { max-width: 100%; }
+
+            /* Metrics */
+            .metric-row { flex-direction: column; }
+            .m-num, .m-label { width: 100%; padding: 2rem 5vw; border-right: none; }
+            .m-num { border-bottom: 1px solid var(--grid); font-size: 4rem; }
+            
+            /* Team Roster */
+            .team-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem 0; }
+            .team-item:hover .team-name { padding-left: 0; }
+
+            /* Footer */
+            footer { height: auto; padding: 15vh 5vw; }
+            .cta-btn { width: 100%; padding: 1.2rem; }
+            .cta-links { gap: 1rem; }
         }
     </style>
 </head>
@@ -214,7 +264,7 @@
         <div class="logo"><img src="https://i.pinimg.com/736x/bd/d0/5c/bdd05c94afb66b5a72f5e17a7a879ab3.jpg" alt="Ofbuzz Technology Logo"></div>
         <div class="nav-links">
             <a href="https://www.linkedin.com/in/satyamxpandey/" class="nav-link hover-target" target="_blank">LinkedIn</a>
-            <a href="https://chat.whatsapp.com/KShccjQGtulFjnocl0LK4A" class="nav-link hover-target" target="_blank">Inner Circle</a>
+            <a href="https://chat.whatsapp.com/KShccjQGtulFjnocl0LK4A" class="nav-link hover-target" target="_blank">Community</a>
         </div>
     </nav>
 
@@ -234,12 +284,12 @@
             </div>
         </div>
         
-        <div class="hero-img-container">
+        <div class="hero-img-container gs-hero-img">
             <img src="https://i.pinimg.com/736x/47/d1/1f/47d11f0dbe0aec83d86cc0f38d6dcd67.jpg" alt="Satyam Pandey">
         </div>
     </section>
 
-    <!-- 2. Horizontal Scroll Architecture -->
+    <!-- 2. Responsive Architecture (Horizontal Desktop, Stacked Mobile) -->
     <section class="horizontal-section" id="horizontal">
         <div class="horizontal-wrapper">
             <div class="h-panel">
@@ -284,7 +334,6 @@
     <section class="brands-section">
         <div class="marquee-3d-wrap">
             <div class="marquee-track track-left">
-                <!-- Group 1 -->
                 <div class="brand-item hover-target">Getwise POS</div>
                 <div class="brand-item hover-target">Vachya Jewels</div>
                 <div class="brand-item hover-target">Rosce Jewellers</div>
@@ -309,9 +358,7 @@
                 <div class="brand-item hover-target">Everycom</div>
                 <div class="brand-item hover-target">VVIP Travels</div>
             </div>
-
             <div class="marquee-track track-right">
-                <!-- Group 2 -->
                 <div class="brand-item hover-target">OfbuzzMart</div>
                 <div class="brand-item hover-target">BBK India</div>
                 <div class="brand-item hover-target">Vellora Global</div>
@@ -342,7 +389,6 @@
     <!-- 5. Executive Board -->
     <section class="roster-section">
         <h2 class="section-heading">Executive <span class="text-stroke">Board.</span></h2>
-        
         <div class="team-list">
             <div class="team-item hover-target">
                 <div class="team-name">Naina Jain</div>
@@ -392,7 +438,7 @@
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. Custom Cursor
+        // 2. Custom Cursor (Desktop Only via CSS Pointer Media Query)
         const cursor = document.querySelector('.cursor');
         window.addEventListener('mousemove', (e) => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
@@ -405,7 +451,7 @@
         // 3. Preloader & Intro Sequence
         let counter = { val: 0 };
         gsap.to(counter, {
-            val: 100, duration: 2.5, ease: "power4.inOut",
+            val: 100, duration: 2.2, ease: "power4.inOut",
             onUpdate: function() {
                 document.querySelector('.preloader-counter').innerText = Math.round(counter.val) + "%";
                 document.querySelector('.preloader-bar').style.width = Math.round(counter.val) + "%";
@@ -413,34 +459,41 @@
             onComplete: () => {
                 const tl = gsap.timeline();
                 tl.to(".preloader", { yPercent: -100, duration: 1, ease: "power4.inOut" })
-                  .to(".hero-img-container", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 1.5, ease: "power4.out" }, "-=0.5")
+                  .to(".gs-hero-img", { clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)", duration: 1.5, ease: "power4.out" }, "-=0.5")
                   .to(".hero .split-child", { y: 0, duration: 1.2, stagger: 0.1, ease: "power4.out" }, "-=1");
             }
         });
 
-        // 4. GSAP ScrollTrigger Setups
+        // 4. GSAP ScrollTrigger & MatchMedia
         gsap.registerPlugin(ScrollTrigger);
 
-        // Horizontal Scroll Jacking
-        const horizontalSection = document.querySelector('.horizontal-wrapper');
-        function getScrollAmount() {
-            let wrapperWidth = horizontalSection.scrollWidth;
-            return -(wrapperWidth - window.innerWidth);
-        }
+        // Apply Horizontal scroll ONLY on Desktop/Tablets (min-width: 769px)
+        let mm = gsap.matchMedia();
+        
+        mm.add("(min-width: 769px)", () => {
+            const horizontalSection = document.querySelector('.horizontal-wrapper');
+            function getScrollAmount() {
+                return -(horizontalSection.scrollWidth - window.innerWidth);
+            }
 
-        const tween = gsap.to(horizontalSection, { x: getScrollAmount, ease: "none" });
-        ScrollTrigger.create({
-            trigger: ".horizontal-section",
-            start: "top top",
-            end: () => `+=${getScrollAmount() * -1}`,
-            pin: true, animation: tween, scrub: 1, invalidateOnRefresh: true
+            const tween = gsap.to(horizontalSection, { x: getScrollAmount, ease: "none" });
+            ScrollTrigger.create({
+                trigger: ".horizontal-section",
+                start: "top top",
+                end: () => `+=${getScrollAmount() * -1}`,
+                pin: true, 
+                animation: tween, 
+                scrub: 1, 
+                invalidateOnRefresh: true
+            });
         });
+        // On mobile (max-width: 768px), it naturally falls back to native vertical scrolling.
 
         // Roster Reveal
         gsap.utils.toArray('.team-item').forEach(item => {
             gsap.from(item, {
                 scrollTrigger: { trigger: item, start: "top 95%" },
-                y: 50, opacity: 0, duration: 1, ease: "power3.out"
+                y: 40, opacity: 0, duration: 1, ease: "power3.out"
             });
         });
     </script>
