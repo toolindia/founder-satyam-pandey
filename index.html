@@ -36,7 +36,6 @@
             width: 100%;
         }
 
-        /* Hide cursor by default, enable on hover devices */
         html { cursor: auto; }
         @media (hover: hover) and (pointer: fine) {
             * { cursor: none; }
@@ -83,8 +82,8 @@
         }
 
         /* --- TYPOGRAPHY UTILS --- */
-        .split-parent { overflow: hidden; }
-        .split-child { display: inline-block; transform: translateY(110%); }
+        .split-parent { overflow: hidden; display: block; max-width: 100%; }
+        .split-child { display: inline-block; transform: translateY(110%); max-width: 100%; }
         .text-stroke { -webkit-text-stroke: 1.5px var(--fg); color: transparent; }
         @media (max-width: 768px) { .text-stroke { -webkit-text-stroke: 1px var(--fg); } }
         
@@ -107,17 +106,19 @@
         .hero-content {
             position: relative; z-index: 3;
             display: flex; flex-direction: column; justify-content: center;
-            width: 100%;
+            width: 100%; max-width: 100%;
         }
         
         .hero-title {
             font-family: var(--font-display); 
-            font-size: clamp(2.8rem, 10vw, 12rem); 
+            /* Recalibrated clamp to prevent ARCHITECT from clipping on 1080p+ */
+            font-size: clamp(2.5rem, 7.5vw, 9rem); 
             font-weight: 800; 
             line-height: 0.95; 
             text-transform: uppercase;
             margin-bottom: 2rem;
             color: var(--fg);
+            word-wrap: break-word; /* Safety fallback */
         }
 
         .hero-img-container {
@@ -209,13 +210,11 @@
         }
 
         @media (max-width: 768px) {
-            /* Navigation */
             nav { padding: 1.5rem 5vw; }
             .nav-links { gap: 1.5rem; }
             
-            /* Hero Section */
-            .hero { padding-top: 12vh; flex-direction: column; align-items: flex-start; justify-content: flex-start; }
-            .hero-title { margin-bottom: 1.5rem; }
+            .hero { padding-top: 15vh; flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+            .hero-title { margin-bottom: 1.5rem; font-size: clamp(3rem, 12vw, 5rem); } /* Bump up mobile text slightly */
             .hero-meta { margin-bottom: 3rem; font-size: 1rem; }
             .hero-img-container {
                 position: relative; top: auto; right: auto; transform: none;
@@ -223,22 +222,18 @@
             }
             .hero-img-container::after { background: linear-gradient(180deg, var(--bg) 0%, transparent 30%); }
 
-            /* Disable GSAP Horizontal Scroll on Mobile - Stack vertically instead */
             .horizontal-section { height: auto; padding: 10vh 0; }
             .horizontal-wrapper { flex-direction: column; width: 100%; gap: 4rem; padding: 0 5vw; }
             .h-panel { width: 100%; }
             .h-desc { max-width: 100%; }
 
-            /* Metrics */
             .metric-row { flex-direction: column; }
             .m-num, .m-label { width: 100%; padding: 2rem 5vw; border-right: none; }
             .m-num { border-bottom: 1px solid var(--grid); font-size: 4rem; }
             
-            /* Team Roster */
             .team-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem 0; }
             .team-item:hover .team-name { padding-left: 0; }
 
-            /* Footer */
             footer { height: auto; padding: 15vh 5vw; }
             .cta-btn { width: 100%; padding: 1.2rem; }
             .cta-links { gap: 1rem; }
@@ -247,7 +242,6 @@
 </head>
 <body>
 
-    <!-- Preloader -->
     <div class="preloader">
         <div class="preloader-counter">0%</div>
         <div class="preloader-bar-wrap">
@@ -255,7 +249,6 @@
         </div>
     </div>
 
-    <!-- System Elements -->
     <div class="noise"></div>
     <div class="grid-overlay"></div>
     <div class="cursor"></div>
@@ -268,7 +261,6 @@
         </div>
     </nav>
 
-    <!-- 1. Hero -->
     <section class="hero">
         <div class="hero-content">
             <h1 class="hero-title">
@@ -289,7 +281,6 @@
         </div>
     </section>
 
-    <!-- 2. Responsive Architecture (Horizontal Desktop, Stacked Mobile) -->
     <section class="horizontal-section" id="horizontal">
         <div class="horizontal-wrapper">
             <div class="h-panel">
@@ -310,7 +301,6 @@
         </div>
     </section>
 
-    <!-- 3. Brutalist Metrics -->
     <section class="metrics-section">
         <div class="metric-row hover-target">
             <div class="m-num">100+</div>
@@ -330,7 +320,6 @@
         </div>
     </section>
 
-    <!-- 4. 3D Marquee (Client Network) -->
     <section class="brands-section">
         <div class="marquee-3d-wrap">
             <div class="marquee-track track-left">
@@ -386,7 +375,6 @@
         </div>
     </section>
 
-    <!-- 5. Executive Board -->
     <section class="roster-section">
         <h2 class="section-heading">Executive <span class="text-stroke">Board.</span></h2>
         <div class="team-list">
@@ -421,7 +409,6 @@
         </div>
     </section>
 
-    <!-- 6. Footer -->
     <footer>
         <h2 class="footer-title hover-target">Initiate<br><span class="text-stroke">Growth.</span></h2>
         <div class="cta-links">
@@ -431,14 +418,11 @@
         </div>
     </footer>
 
-    <!-- ENGINE SCRIPTS -->
     <script>
-        // 1. Lenis Smooth Scroll
         const lenis = new Lenis({ duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. Custom Cursor (Desktop Only via CSS Pointer Media Query)
         const cursor = document.querySelector('.cursor');
         window.addEventListener('mousemove', (e) => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
@@ -448,7 +432,6 @@
             el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         });
 
-        // 3. Preloader & Intro Sequence
         let counter = { val: 0 };
         gsap.to(counter, {
             val: 100, duration: 2.2, ease: "power4.inOut",
@@ -464,12 +447,9 @@
             }
         });
 
-        // 4. GSAP ScrollTrigger & MatchMedia
         gsap.registerPlugin(ScrollTrigger);
 
-        // Apply Horizontal scroll ONLY on Desktop/Tablets (min-width: 769px)
         let mm = gsap.matchMedia();
-        
         mm.add("(min-width: 769px)", () => {
             const horizontalSection = document.querySelector('.horizontal-wrapper');
             function getScrollAmount() {
@@ -487,9 +467,7 @@
                 invalidateOnRefresh: true
             });
         });
-        // On mobile (max-width: 768px), it naturally falls back to native vertical scrolling.
 
-        // Roster Reveal
         gsap.utils.toArray('.team-item').forEach(item => {
             gsap.from(item, {
                 scrollTrigger: { trigger: item, start: "top 95%" },
