@@ -90,6 +90,7 @@
             -webkit-text-stroke: 1.5px var(--fg); 
             color: transparent; 
             transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.4s ease, text-shadow 0.4s ease;
+            pointer-events: auto; /* Keep text hover interactive */
         }
         @media (min-width: 769px) {
             .text-stroke:hover {
@@ -110,7 +111,7 @@
         }
         .logo img { height: 35px; border-radius: 2px; }
         .nav-links { display: flex; gap: 3rem; }
-        .nav-link { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; text-decoration: none; color: var(--fg); letter-spacing: 0.1em; }
+        .nav-link { font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase; text-decoration: none; color: var(--fg); letter-spacing: 0.1em; pointer-events: auto; }
 
         /* --- RESPONSIVE HERO SECTION --- */
         .hero {
@@ -122,10 +123,9 @@
             position: relative; z-index: 3;
             display: flex; flex-direction: column; justify-content: center;
             width: 100%; max-width: 100%;
-            /* Allows cursor to pass through empty text space and hit the image below */
+            /* Make invisible text container ignore pointer events so mouse goes directly to image */
             pointer-events: none; 
         }
-        .hero-content > * { pointer-events: auto; } /* Re-enables pointer events for text elements */
         
         .hero-title {
             font-family: var(--font-display); 
@@ -136,23 +136,24 @@
             margin-bottom: 2rem;
             color: var(--fg);
             word-wrap: break-word;
-            /* Will be driven by GSAP parallax */
+            pointer-events: none; /* Ignore pointer so photo hover works perfectly underneath */
         }
 
-        /* --- INTERACTIVE HERO IMAGE --- */
+        /* --- FLAWLESS IMAGE HOVER EFFECT --- */
         .hero-img-container {
             position: absolute; top: 50%; right: 5vw;
             width: 40vw; max-width: 600px; height: 75vh;
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-            z-index: 2; /* Sits below text but is interactive */
+            z-index: 2; /* Below text */
+            pointer-events: auto; /* Actively detects mouse */
             
-            /* The base state (B&W) */
+            /* Pure Black & White Base */
             filter: grayscale(100%) contrast(1.1);
             transform: translateY(-50%) scale(1);
-            transition: filter 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* The Hover State (Colorful & Slightly Scaled) */
+        /* Transforms to full color on hover */
         @media (min-width: 769px) {
             .hero-img-container:hover {
                 filter: grayscale(0%) contrast(1.05);
@@ -163,10 +164,10 @@
         .hero-img-container::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(90deg, var(--bg) 0%, transparent 30%);
-            pointer-events: none;
-            transition: opacity 0.7s ease;
+            pointer-events: none; /* Important: prevents gradient from blocking hover */
+            transition: opacity 0.5s ease;
         }
-        .hero-img-container:hover::after { opacity: 0.5; } /* Reduces shadow darkness on hover */
+        .hero-img-container:hover::after { opacity: 0.3; } 
         
         .hero-img-container img { width: 100%; height: 100%; object-fit: cover; }
         
@@ -174,6 +175,7 @@
             position: relative; z-index: 3;
             max-width: 500px; font-family: var(--font-body); color: var(--muted);
             font-size: 1.1rem; line-height: 1.7; margin-top: 1rem;
+            pointer-events: none;
         }
 
         /* --- ARCHITECTURE SECTION --- */
@@ -306,7 +308,7 @@
         <div class="hero-content">
             <div class="hero-title">
                 <div class="split-parent"><div class="split-child">Digital</div></div><br>
-                <div class="split-parent hover-target"><div class="split-child text-stroke">Empire</div></div><br>
+                <div class="split-parent"><div class="split-child text-stroke">Empire</div></div><br>
                 <div class="split-parent"><div class="split-child">Architect.</div></div>
             </div>
             
@@ -317,7 +319,7 @@
             </div>
         </div>
         
-        <!-- Added hover-target class to make the custom cursor expand over the photo -->
+        <!-- Image is completely interactive now -->
         <div class="hero-img-container gs-hero-img hover-target">
             <img src="https://i.pinimg.com/736x/47/d1/1f/47d11f0dbe0aec83d86cc0f38d6dcd67.jpg" alt="Satyam Pandey">
         </div>
@@ -376,7 +378,6 @@
                 <div class="brand-item hover-target">AM Jewellers</div>
                 <div class="brand-item hover-target">Everycom</div>
                 <div class="brand-item hover-target">VVIP Travels</div>
-                <!-- Duplicate -->
                 <div class="brand-item hover-target">Getwise POS</div>
                 <div class="brand-item hover-target">Vachya Jewels</div>
                 <div class="brand-item hover-target">Rosce Jewellers</div>
@@ -401,7 +402,6 @@
                 <div class="brand-item hover-target">Diamond Mansion</div>
                 <div class="brand-item hover-target">NYJ Chicago</div>
                 <div class="brand-item hover-target">SHRAVAN KUMAR Foundation</div>
-                <!-- Duplicate -->
                 <div class="brand-item hover-target">OfbuzzMart</div>
                 <div class="brand-item hover-target">BBK India</div>
                 <div class="brand-item hover-target">Vellora Global</div>
@@ -471,10 +471,8 @@
         const heroTitle = document.querySelector('.hero-title');
         
         window.addEventListener('mousemove', (e) => {
-            // Update Cursor Position
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
             
-            // Subtle 3D Parallax on Main Title (Only runs on screens > 768px)
             if (window.innerWidth > 768) {
                 const xMove = (window.innerWidth / 2 - e.clientX) * 0.015;
                 const yMove = (window.innerHeight / 2 - e.clientY) * 0.015;
