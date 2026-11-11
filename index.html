@@ -84,8 +84,23 @@
         /* --- TYPOGRAPHY UTILS --- */
         .split-parent { overflow: hidden; display: block; max-width: 100%; }
         .split-child { display: inline-block; transform: translateY(110%); max-width: 100%; }
-        .text-stroke { -webkit-text-stroke: 1.5px var(--fg); color: transparent; }
-        @media (max-width: 768px) { .text-stroke { -webkit-text-stroke: 1px var(--fg); } }
+        
+        /* Interactive Main Font Hollow Stroke */
+        .text-stroke { 
+            -webkit-text-stroke: 1.5px var(--fg); 
+            color: transparent; 
+            transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-text-stroke 0.4s ease, text-shadow 0.4s ease;
+        }
+        @media (min-width: 769px) {
+            .text-stroke:hover {
+                color: var(--accent);
+                -webkit-text-stroke: 1.5px var(--accent);
+                text-shadow: 0 0 40px rgba(255, 51, 0, 0.4);
+            }
+        }
+        @media (max-width: 768px) { 
+            .text-stroke { -webkit-text-stroke: 1px var(--fg); } 
+        }
         
         /* --- NAVIGATION --- */
         nav {
@@ -107,32 +122,52 @@
             position: relative; z-index: 3;
             display: flex; flex-direction: column; justify-content: center;
             width: 100%; max-width: 100%;
+            /* Allows cursor to pass through empty text space and hit the image below */
+            pointer-events: none; 
         }
+        .hero-content > * { pointer-events: auto; } /* Re-enables pointer events for text elements */
         
         .hero-title {
             font-family: var(--font-display); 
-            /* Recalibrated clamp to prevent ARCHITECT from clipping on 1080p+ */
             font-size: clamp(2.5rem, 7.5vw, 9rem); 
             font-weight: 800; 
             line-height: 0.95; 
             text-transform: uppercase;
             margin-bottom: 2rem;
             color: var(--fg);
-            word-wrap: break-word; /* Safety fallback */
+            word-wrap: break-word;
+            /* Will be driven by GSAP parallax */
         }
 
+        /* --- INTERACTIVE HERO IMAGE --- */
         .hero-img-container {
             position: absolute; top: 50%; right: 5vw;
-            transform: translateY(-50%); width: 40vw; max-width: 600px; height: 75vh;
+            width: 40vw; max-width: 600px; height: 75vh;
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-            z-index: 1; filter: grayscale(100%) contrast(1.1);
+            z-index: 2; /* Sits below text but is interactive */
+            
+            /* The base state (B&W) */
+            filter: grayscale(100%) contrast(1.1);
+            transform: translateY(-50%) scale(1);
+            transition: filter 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* The Hover State (Colorful & Slightly Scaled) */
+        @media (min-width: 769px) {
+            .hero-img-container:hover {
+                filter: grayscale(0%) contrast(1.05);
+                transform: translateY(-50%) scale(1.03);
+            }
         }
         
         .hero-img-container::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(90deg, var(--bg) 0%, transparent 30%);
             pointer-events: none;
+            transition: opacity 0.7s ease;
         }
+        .hero-img-container:hover::after { opacity: 0.5; } /* Reduces shadow darkness on hover */
+        
         .hero-img-container img { width: 100%; height: 100%; object-fit: cover; }
         
         .hero-meta {
@@ -214,11 +249,17 @@
             .nav-links { gap: 1.5rem; }
             
             .hero { padding-top: 15vh; flex-direction: column; align-items: flex-start; justify-content: flex-start; }
-            .hero-title { margin-bottom: 1.5rem; font-size: clamp(3rem, 12vw, 5rem); } /* Bump up mobile text slightly */
+            .hero-title { margin-bottom: 1.5rem; font-size: clamp(3rem, 12vw, 5rem); } 
             .hero-meta { margin-bottom: 3rem; font-size: 1rem; }
+            
             .hero-img-container {
-                position: relative; top: auto; right: auto; transform: none;
+                position: relative; top: auto; right: auto; 
+                transform: scale(1);
                 width: 100%; height: 50vh; clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+            }
+            .hero-img-container:hover {
+                filter: grayscale(0%) contrast(1.05);
+                transform: scale(1.02);
             }
             .hero-img-container::after { background: linear-gradient(180deg, var(--bg) 0%, transparent 30%); }
 
@@ -263,11 +304,11 @@
 
     <section class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">
+            <div class="hero-title">
                 <div class="split-parent"><div class="split-child">Digital</div></div><br>
-                <div class="split-parent"><div class="split-child text-stroke">Empire</div></div><br>
+                <div class="split-parent hover-target"><div class="split-child text-stroke">Empire</div></div><br>
                 <div class="split-parent"><div class="split-child">Architect.</div></div>
-            </h1>
+            </div>
             
             <div class="hero-meta">
                 <div class="split-parent"><div class="split-child">I engineer 2X–5X scalable growth infrastructures</div></div>
@@ -276,7 +317,8 @@
             </div>
         </div>
         
-        <div class="hero-img-container gs-hero-img">
+        <!-- Added hover-target class to make the custom cursor expand over the photo -->
+        <div class="hero-img-container gs-hero-img hover-target">
             <img src="https://i.pinimg.com/736x/47/d1/1f/47d11f0dbe0aec83d86cc0f38d6dcd67.jpg" alt="Satyam Pandey">
         </div>
     </section>
@@ -315,7 +357,7 @@
             <div class="m-label">// Monetized YouTube Audience</div>
         </div>
         <div class="metric-row hover-target">
-            <div class="m-num">10M+</div>
+            <div class="m-num">1M+</div>
             <div class="m-label">// Content Views Engineered</div>
         </div>
     </section>
@@ -419,19 +461,33 @@
     </footer>
 
     <script>
+        // 1. Lenis Smooth Scroll
         const lenis = new Lenis({ duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
         function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
+        // 2. Custom Cursor & Parallax Logic (Desktop Only)
         const cursor = document.querySelector('.cursor');
+        const heroTitle = document.querySelector('.hero-title');
+        
         window.addEventListener('mousemove', (e) => {
+            // Update Cursor Position
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+            
+            // Subtle 3D Parallax on Main Title (Only runs on screens > 768px)
+            if (window.innerWidth > 768) {
+                const xMove = (window.innerWidth / 2 - e.clientX) * 0.015;
+                const yMove = (window.innerHeight / 2 - e.clientY) * 0.015;
+                gsap.to(heroTitle, { x: xMove, y: yMove, duration: 1, ease: "power2.out" });
+            }
         });
+        
         document.querySelectorAll('.hover-target, a').forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('active'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
         });
 
+        // 3. Preloader & Intro Sequence
         let counter = { val: 0 };
         gsap.to(counter, {
             val: 100, duration: 2.2, ease: "power4.inOut",
@@ -447,6 +503,7 @@
             }
         });
 
+        // 4. GSAP ScrollTrigger & MatchMedia
         gsap.registerPlugin(ScrollTrigger);
 
         let mm = gsap.matchMedia();
@@ -468,6 +525,7 @@
             });
         });
 
+        // Roster Reveal
         gsap.utils.toArray('.team-item').forEach(item => {
             gsap.from(item, {
                 scrollTrigger: { trigger: item, start: "top 95%" },
