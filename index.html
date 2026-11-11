@@ -123,7 +123,6 @@
             position: relative; z-index: 3;
             display: flex; flex-direction: column; justify-content: center;
             width: 100%; max-width: 100%;
-            /* Make invisible text container ignore pointer events so mouse goes directly to image */
             pointer-events: none; 
         }
         
@@ -136,16 +135,17 @@
             margin-bottom: 2rem;
             color: var(--fg);
             word-wrap: break-word;
-            pointer-events: none; /* Ignore pointer so photo hover works perfectly underneath */
+            pointer-events: none; 
         }
 
-        /* --- FLAWLESS IMAGE HOVER EFFECT --- */
+        /* --- FLAWLESS 9:16 IMAGE HOVER EFFECT --- */
         .hero-img-container {
             position: absolute; top: 50%; right: 5vw;
-            width: 40vw; max-width: 600px; height: 75vh;
+            height: 75vh; /* Drives the size on desktop */
+            aspect-ratio: 9 / 16; /* PERFECT 9:16 PORTRAIT RATIO */
             clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-            z-index: 2; /* Below text */
-            pointer-events: auto; /* Actively detects mouse */
+            z-index: 2; 
+            pointer-events: auto; 
             
             /* Pure Black & White Base */
             filter: grayscale(100%) contrast(1.1);
@@ -153,7 +153,6 @@
             transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
-        /* Transforms to full color on hover */
         @media (min-width: 769px) {
             .hero-img-container:hover {
                 filter: grayscale(0%) contrast(1.05);
@@ -164,12 +163,16 @@
         .hero-img-container::after {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(90deg, var(--bg) 0%, transparent 30%);
-            pointer-events: none; /* Important: prevents gradient from blocking hover */
+            pointer-events: none; 
             transition: opacity 0.5s ease;
         }
         .hero-img-container:hover::after { opacity: 0.3; } 
         
-        .hero-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-img-container img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            object-position: center top; /* Keeps face in frame if any subtle cropping occurs */
+        }
         
         .hero-meta {
             position: relative; z-index: 3;
@@ -241,7 +244,6 @@
            MOBILE & TABLET RESPONSIVE OVERRIDES
            ========================================= */
         @media (max-width: 1024px) {
-            .hero-img-container { width: 50vw; }
             .horizontal-wrapper { gap: 15vw; }
             .h-panel { width: 70vw; }
         }
@@ -257,7 +259,12 @@
             .hero-img-container {
                 position: relative; top: auto; right: auto; 
                 transform: scale(1);
-                width: 100%; height: 50vh; clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+                width: 100%; 
+                height: auto;
+                aspect-ratio: 9 / 16; /* PERFECT 9:16 PORTRAIT RATIO FOR MOBILE */
+                max-width: 450px; /* Caps the size so it doesn't get ridiculously tall on large tablets */
+                clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+                margin: 0 auto;
             }
             .hero-img-container:hover {
                 filter: grayscale(0%) contrast(1.05);
@@ -308,7 +315,7 @@
         <div class="hero-content">
             <div class="hero-title">
                 <div class="split-parent"><div class="split-child">Digital</div></div><br>
-                <div class="split-parent"><div class="split-child text-stroke">Empire</div></div><br>
+                <div class="split-parent hover-target"><div class="split-child text-stroke">Empire</div></div><br>
                 <div class="split-parent"><div class="split-child">Architect.</div></div>
             </div>
             
@@ -319,7 +326,6 @@
             </div>
         </div>
         
-        <!-- Image is completely interactive now -->
         <div class="hero-img-container gs-hero-img hover-target">
             <img src="https://i.pinimg.com/736x/47/d1/1f/47d11f0dbe0aec83d86cc0f38d6dcd67.jpg" alt="Satyam Pandey">
         </div>
@@ -359,7 +365,7 @@
             <div class="m-label">// Monetized YouTube Audience</div>
         </div>
         <div class="metric-row hover-target">
-            <div class="m-num">10M+</div>
+            <div class="m-num">1M+</div>
             <div class="m-label">// Content Views Engineered</div>
         </div>
     </section>
@@ -378,6 +384,7 @@
                 <div class="brand-item hover-target">AM Jewellers</div>
                 <div class="brand-item hover-target">Everycom</div>
                 <div class="brand-item hover-target">VVIP Travels</div>
+                <!-- Duplicate -->
                 <div class="brand-item hover-target">Getwise POS</div>
                 <div class="brand-item hover-target">Vachya Jewels</div>
                 <div class="brand-item hover-target">Rosce Jewellers</div>
@@ -402,6 +409,7 @@
                 <div class="brand-item hover-target">Diamond Mansion</div>
                 <div class="brand-item hover-target">NYJ Chicago</div>
                 <div class="brand-item hover-target">SHRAVAN KUMAR Foundation</div>
+                <!-- Duplicate -->
                 <div class="brand-item hover-target">OfbuzzMart</div>
                 <div class="brand-item hover-target">BBK India</div>
                 <div class="brand-item hover-target">Vellora Global</div>
